@@ -71,8 +71,15 @@ class CDKInstall extends InstallableItem {
       }, username, password);
 
     downloader.setWriteStream(ocWriteStream);
+    if(!this.ocUrl.endsWith('.zip')) {
+      var fname = "";
+      request(this.ocUrl,function(err,rsp,body){
+       fname = body.match(/openshift-origin-client-tools-v1\.1-\w{3}-\w{8}-\w{7}-windows\.zip/)[0];
+      });
+      this.ocUrl=this.ocUrl.concat(fname);
+    }
     downloader.download(this.ocUrl);
-
+    
     downloader.setWriteStream(vagrantFileWriteStream);
     downloader.download(this.vagrantFileUrl)
 
