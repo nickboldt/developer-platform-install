@@ -46,7 +46,7 @@ class CygwinInstall extends InstallableItem {
       '--quiet-mode',
       '--only-site',
       '--site',
-      'http://mirrors.kernel.org/sourceware/cygwin',
+      'http://mirrors.xmission.com/cygwin',
       '--root',
       this.installerDataSvc.cygwinDir(),
       '--categories',

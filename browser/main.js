@@ -69,8 +69,8 @@ let mainModule =
                 CDKInstall.key(),
                 new CDKInstall(installerDataSvc,
                                 $timeout,
-                                'https://developers.redhat.com/download-manager/jdf/file/cdk-2.0.0-beta3.zip?workflow=direct',
-                                'http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
+                                'http://cdk-builds.usersys.redhat.com/builds/11-Dec-2015/cdk-2.0.0-beta3.zip',
+                                'http://localhost:8080/1/rhel-7.2-server-kubernetes-vagrant-scratch-7.2-1.x86_64.vagrant-virtualbox.box',
                                 'https://ci.openshift.redhat.com/jenkins/job/devenv_ami/lastSuccessfulBuild/artifact/origin/artifacts/release/',
                                 'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
                                 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe',
@@ -80,7 +80,7 @@ let mainModule =
             installerDataSvc.addItemToInstall(
                 VagrantInstall.key(),
                 new VagrantInstall(installerDataSvc,
-                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
+                                    'http://localhost:8080/1/vagrant.zip',
                                     null)
             );
 
@@ -89,21 +89,21 @@ let mainModule =
                 new VirtualBoxInstall('5.0.8',
                                       '103449',
                                       installerDataSvc,
-                                      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
+                                      'http://localhost:8080/1/VirtualBox-${version}.exe',
                                       null)
             );
 
             installerDataSvc.addItemToInstall(
                 JdkInstall.key(),
                 new JdkInstall(installerDataSvc,
-                               'http://cdn.azulsystems.com/zulu/bin/zulu1.8.0_66-8.11.0.1-win64.zip',
+                               'http://localhost:8080/1/jdk8.zip',
                                null)
             );
 
             installerDataSvc.addItemToInstall(
                 JbdsInstall.key(),
                 new JbdsInstall(installerDataSvc,
-                                'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar',
+                                'http://localhost:8080/1/jboss-devstudio-9.1.0.latest-installer-standalone.jar',
                                 null)
             );
 
