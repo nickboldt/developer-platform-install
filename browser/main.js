@@ -66,6 +66,26 @@ let mainModule =
           }])
           .run( ['$rootScope', '$location', '$timeout', 'installerDataSvc', ($rootScope, $location, $timeout, installerDataSvc) => {
             installerDataSvc.addItemToInstall(
+                VirtualBoxInstall.key(),
+                new VirtualBoxInstall('5.0.8',
+                                      '103449',
+                                      installerDataSvc,
+                                      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
+                                      null)
+            );
+            installerDataSvc.addItemToInstall(
+                CygwinInstall.key(),
+                new CygwinInstall(installerDataSvc,
+                                  'https://cygwin.com/setup-x86_64.exe',
+                                  null)
+            );
+            installerDataSvc.addItemToInstall(
+                VagrantInstall.key(),
+                new VagrantInstall(installerDataSvc,
+                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
+                                    null)
+            );
+            installerDataSvc.addItemToInstall(
                 CDKInstall.key(),
                 new CDKInstall(installerDataSvc,
                                 $timeout,
@@ -75,22 +95,6 @@ let mainModule =
                                 'https://github.com/redhat-developer-tooling/openshift-vagrant/archive/master.zip',
                                 'http://the.earth.li/~sgtatham/putty/latest/x86/pscp.exe',
                                 null)
-            );
-
-            installerDataSvc.addItemToInstall(
-                VagrantInstall.key(),
-                new VagrantInstall(installerDataSvc,
-                                    'https://github.com/redhat-developer-tooling/vagrant-distribution/archive/1.7.4.zip',
-                                    null)
-            );
-
-            installerDataSvc.addItemToInstall(
-                VirtualBoxInstall.key(),
-                new VirtualBoxInstall('5.0.8',
-                                      '103449',
-                                      installerDataSvc,
-                                      'http://download.virtualbox.org/virtualbox/${version}/VirtualBox-${version}-${revision}-Win.exe',
-                                      null)
             );
 
             installerDataSvc.addItemToInstall(
@@ -105,13 +109,6 @@ let mainModule =
                 new JbdsInstall(installerDataSvc,
                                 'https://devstudio.redhat.com/9.0/snapshots/builds/devstudio.product_9.0.mars/latest/all/jboss-devstudio-9.1.0.latest-installer-standalone.jar',
                                 null)
-            );
-
-            installerDataSvc.addItemToInstall(
-                CygwinInstall.key(),
-                new CygwinInstall(installerDataSvc,
-                                  'https://cygwin.com/setup-x86_64.exe',
-                                  null)
             );
           }]);
 

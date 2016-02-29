@@ -6,7 +6,7 @@ import Logger from './logger';
 let os = require('os');
 let path = require('path');
 let fs = require('fs');
-let ipcRenderer = require('electron').ipcRenderer;
+let electron = require('electron');
 
 class InstallerDataService {
   constructor($state) {
@@ -21,7 +21,7 @@ class InstallerDataService {
     Logger.initialize(this.installRoot);
 
     fs.mkdirSync(this.installRoot);
-
+    this.ipcRenderer = electron.ipcRenderer;
     this.router = $state;
 
     this.username = '';
@@ -47,6 +47,10 @@ class InstallerDataService {
 
   addItemToInstall(key, item) {
     this.installableItems.set(key, item);
+  }
+
+  getIpcRenderer() {
+    return this.ipcRenderer;
   }
 
   getInstallable(key) {
