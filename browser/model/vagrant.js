@@ -8,16 +8,18 @@ import InstallableItem from './installable-item';
 import Downloader from './helpers/downloader';
 import Logger from '../services/logger';
 import Installer from './helpers/installer';
+import Exec from  './helpers/exec';
 import CygwinInstall from './cygwin';
 
 class VagrantInstall extends InstallableItem {
-  constructor(installerDataSvc, downloadUrl, installFile) {
+  constructor(installerDataSvc, downloadUrl, installFile, executor = new Exec()) {
     super('Vagrant', 900, downloadUrl, installFile);
 
     this.installerDataSvc = installerDataSvc;
     this.downloadedFileName = 'vagrant.zip';
     this.downloadedFile = path.join(this.installerDataSvc.tempDir(), this.downloadedFileName);
     this.vagrantPathScript = path.join(this.installerDataSvc.tempDir(), 'set-vagrant-path.ps1');
+    this.executor = executor;
   }
 
   static key() {
@@ -84,6 +86,21 @@ class VagrantInstall extends InstallableItem {
     //.then((result) => { return installer.exec('setx VAGRANT_DETECTED_OS "cygwin"'); })
     .then((result) => { return installer.succeed(result); })
     .catch((error) => { return installer.fail(error); });
+  }
+
+  detectInstalledVersion(location = null) {
+    return this.executor.run("vagrant", ["-v"], location).then(
+        (value) => {
+          // find the version and return i
+          var result = value.match(/\w\.\w\.\w/);
+          if(result[0]) {
+            return result[0];
+          }
+          return  "unknown";
+        }, (error) => {
+          return null;
+        }
+    );
   }
 
 }

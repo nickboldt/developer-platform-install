@@ -1,6 +1,8 @@
 'use strict';
 
-import chai, { expect } from 'chai';
+import chai, { expect, should } from 'chai';
+import chaiAsPromised from "chai-as-promised";
+
 import sinon from 'sinon';
 import { default as sinonChai } from 'sinon-chai';
 import mockfs from 'mock-fs';
@@ -11,7 +13,12 @@ import VagrantInstall from 'model/vagrant';
 import Logger from 'services/logger';
 import Downloader from 'model/helpers/downloader';
 import Installer from 'model/helpers/installer';
+import ExecMock from '../../mocks/ExecMock';
+
+
 chai.use(sinonChai);
+chai.use(chaiAsPromised);
+chai.should();
 
 describe('Vagrant installer', function() {
   let installerDataSvc;
@@ -167,6 +174,22 @@ describe('Vagrant installer', function() {
       } catch (error) {
         expect.fail('it did not catch the error');
       }
+    });
+
+    it ('should-detect-version-1.7.4', function() {
+      let installer = new VagrantInstall(installerDataSvc, downloadUrl, null, new ExecMock);
+      return installer.detectInstalledVersion('.\\Vagrant 1.7.4').should.eventually.equal('1.7.4');
+    });
+
+    it ('should-detect-version-1.8.1', function() {
+      let installer = new VagrantInstall(installerDataSvc, downloadUrl, null, new ExecMock);
+      return installer.detectInstalledVersion('.\\Vagrant 1.7.4').should.eventually.equal('1.7.4');
+    });
+
+
+    it ('promise test', function() {
+      return Promise.resolve(2 + 2).should.become(3);
+      //return expect(Promise.resolve(2 + 2)).to.eventually.equal(3);
     });
   });
 });
