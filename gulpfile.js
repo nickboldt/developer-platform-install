@@ -2,6 +2,7 @@
 
 var gulp = require('gulp'),
     fs = require('fs-extra'),
+    crypto = require('crypto'),
     babel = require('gulp-babel'),
     runSequence = require('run-sequence'),
     zip = require('gulp-zip'),
@@ -124,7 +125,73 @@ gulp.task('package', function (cb) {
       });
     });
   });
+  console.log("Generate SHA256 for " + installerExe);
+  var hashstring = createSHA256(installerExe);
+  console.log("Got SHA256 = " + hashstring);
+
 });
+
+// expected SHA256 = a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
+gulp.task('test_getSHA256',function() {
+  getSHA256("C:\\Program Files\\Internet Explorer\\iexplore.exe", function(hashstring) { console.log("Got sha256 = "+ hashstring); } );
+  var filename = "gulpfile.js"; 
+  createSHA256File(filename); console.log("Wrote sha256 to " + filename + ".sha256");
+});
+
+// for a given filename, return the sha256sum
+// eg., a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
+// getSHA256("C:\\Program Files\\Internet Explorer\\iexplore.exe", function(hashstring) { console.log("Got sha256 = "+ hashstring); } );
+function getSHA256(filename, cb) {
+  var hashstring = "NONE";
+  var hash = crypto.createHash('sha256');
+  //console.log("Generate SHA256 for " + filename);
+  var readStream = fs.createReadStream(filename);
+  readStream
+    .on('readable', function () {
+      var chunk;
+      while (null !== (chunk = readStream.read())) {
+        hash.update(chunk);
+      }
+    })
+    .on('end', function () {
+      // a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38
+      hashstring = hash.digest('hex');
+      // console.log("[1] SHA256 = " + hashstring);
+      cb(hashstring);
+    });
+  return hashstring;
+}
+
+// should create a file called gulpfile.js.sha256 with contents that match what you get when you run `sha256sum.exe gulpfile.js`
+gulp.task('test_createSHA256File',function() {
+  var filename = "gulpfile.js"; 
+  createSHA256File(filename); console.log("Wrote sha256 to " + filename + ".sha256");
+});
+
+// writes to {filename}.sha256, eg.,
+// a7da255b161c2c648e8465b183e2483a3bcc64ea1aa9cbdc39d00eeb51cbcf38 *gulpfile.js
+function createSHA256File(filename) {
+  const input = fs.createReadStream(filename);
+  const hash = crypto.createHash('sha256');
+  var hashstring = "NONE";
+
+  input.on('readable', () => {
+    var data = input.read();
+    if (data)
+      hash.update(data);
+    else {
+      hashstring = hash.digest('hex') + " *"  + filename; 
+
+      fs.writeFile(filename + ".sha256", hashstring, function(err) {
+          if(err) {
+              return console.log(err);
+          }
+          return '';
+      });       
+    }
+  });
+  return true;
+}
 
 // Create bundled installer
 gulp.task('package-bundle', function() {
