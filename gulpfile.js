@@ -151,7 +151,7 @@ gulp.task('create-zip-archive', function(cb) {
   //     .pipe(unzip({ filter : function(entry){ return minimatch(entry.path, "**/7za.exe") } }))
   //     .pipe(gulp.dest(buildFolderRoot));
 
-  let packCmd = zaExe + ' a ' + installerExe.replace('-installer.exe','.zip') + ' ' + zaElectronPackage + path.sep + '*'
+  let packCmd = zaExe + ' a ' + installerExe.replace('-bundle-installer.exe','.zip') + ' ' + zaElectronPackage + path.sep + '*'
   // only include prefetch folder when zipping if the folder exists and we're doing a bundle build
   if (fs.existsSync(path.resolve(prefetchFolder)) && installerExe.indexOf("-bundle") > 0) {
     packCmd = packCmd + ' ' + path.resolve(prefetchFolder) + path.sep + '*';
@@ -196,7 +196,7 @@ gulp.task('create-final-exe', function(cb) {
 });
 
 gulp.task('create-sha256sum-of-zip', function(cb) {
-  createSHA256File(installerExe.replace('.exe','.zip'), cb);
+  createSHA256File(installerExe.replace('-bundle-installer.exe','.zip'), cb);
 });
 
 gulp.task('create-sha256sum-of-exe', function(cb) {
